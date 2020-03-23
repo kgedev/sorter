@@ -71,6 +71,7 @@ public class RowsComparator implements Comparator<String[]> {
             if (!isNull(previous[0])
                     && (!digitChars.contains(symbol) || !digitChars.contains(previous[0]))
                     && (digitChars.contains(symbol) || digitChars.contains(previous[0]))) {
+
                 addSubstringToCollection(sb.toString(), result);
                 sb.setLength(0);
             }
