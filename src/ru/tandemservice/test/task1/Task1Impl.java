@@ -16,8 +16,21 @@ import static java.util.Objects.isNull;
 
 public class Task1Impl implements IStringRowsListSorter {
 
-    // ваша реализация должна работать, как singleton. даже при использовании из нескольких потоков.
-    public static final IStringRowsListSorter INSTANCE = new Task1Impl();
+//    public static final IStringRowsListSorter INSTANCE = new Task1Impl();
+    private volatile static IStringRowsListSorter instance;
+
+    private Task1Impl() {}
+
+    public static IStringRowsListSorter getInstance() {
+        if (Objects.isNull(instance)) {
+            synchronized (IStringRowsListSorter.class) {
+                if (Objects.isNull(instance)) {
+                    instance = new Task1Impl();
+                }
+            }
+        }
+        return instance;
+    }
 
     public static void main(String[] args) {
         String s = "1234567890-www1111kht_y56?/.,44345w!@$F_V@$%1_%@#WT_W@3456w_532wr23325ter=324523t+kk222qqqq";
