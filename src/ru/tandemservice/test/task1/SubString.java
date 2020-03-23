@@ -2,6 +2,10 @@ package ru.tandemservice.test.task1;
 
 import java.util.Objects;
 
+/**
+ * Класс для хранения подстроки. Может хранить любые типы данных.
+ * В контексте задачи предназначен для хранения целочисленных и строковых значений.
+ * */
 public class SubString<T> implements Comparable<T>{
     private  T substring;
 
@@ -15,6 +19,15 @@ public class SubString<T> implements Comparable<T>{
 
     public void setSubstring(T substring) {
         this.substring = substring;
+    }
+
+    @Override
+    public int compareTo(T t) {
+        if (this.substring.getClass().equals(t.getClass()) && this.substring.getClass().equals(Integer.class)) {
+            return ((Integer) this.substring).compareTo((Integer) t);
+        } else {
+            return this.substring.toString().compareTo(t.toString());
+        }
     }
 
     @Override
@@ -33,14 +46,5 @@ public class SubString<T> implements Comparable<T>{
     @Override
     public String toString() {
         return substring.toString();
-    }
-
-    @Override
-    public int compareTo(T t) {
-        if (this.substring.getClass().equals(t.getClass()) && this.substring.getClass().equals(Integer.class)) {
-           return ((Integer) this.substring).compareTo((Integer) t);
-        } else {
-            return this.substring.toString().compareTo(t.toString());
-        }
     }
 }
