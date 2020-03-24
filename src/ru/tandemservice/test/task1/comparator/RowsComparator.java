@@ -62,7 +62,7 @@ public class RowsComparator implements Comparator<String[]> {
      * иначе добавляем текущий символ к предыдущему.
      *
      * */
-    public List<SubString> getSubstringsList(String string) {
+    private List<SubString> getSubstringsList(String string) {
         List<SubString> result = new ArrayList<>();
         List<Integer> digitChars = Arrays.asList(48, 49, 50, 51, 52, 53, 54, 55, 56, 57);
         StringBuilder sb = new StringBuilder();
