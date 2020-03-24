@@ -2,8 +2,10 @@ package ru.tandemservice.test.task1.comparator;
 
 import ru.tandemservice.test.task1.SubString;
 
-import java.util.*;
-import java.util.function.Predicate;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.List;
 
 import static java.util.Objects.isNull;
 
@@ -43,6 +45,7 @@ public class RowsComparator implements Comparator<String[]> {
         int minSize = Math.min(str1List.size(), str2List.size());
         int result = 0;
 
+        //Меньшая строка, всегда выше в списке.
         for (int i = 0; i < minSize; i++) {
           result = str1List.get(i).compareTo(str2List.get(i));
           if (result != 0) break;
@@ -54,7 +57,7 @@ public class RowsComparator implements Comparator<String[]> {
     /**
      * Метод позволяющий разбить строку на подстроки.
      * Строка представляется в виде набора символов(char).
-     * В цикле перебираем символы и конструируем подстроки по следующему алгоритму:
+     * В цикле перебираем символы и конструируем подстроки на лету по следующему алгоритму:
      * Если есть предыдущий символ
      * и (текущий символ не число или предыдущий символ не число)
      * и (текущий символ - число или предыдущий символ число)
@@ -68,16 +71,16 @@ public class RowsComparator implements Comparator<String[]> {
         StringBuilder sb = new StringBuilder();
         final Integer[] previous = {null};
 
-        string.chars().forEach(symbol -> {
+        string.chars().forEach(currentSymbol -> {
             if (!isNull(previous[0])
-                    && (!digitChars.contains(symbol) || !digitChars.contains(previous[0]))
-                    && (digitChars.contains(symbol) || digitChars.contains(previous[0]))) {
+                    && (!digitChars.contains(currentSymbol) || !digitChars.contains(previous[0]))
+                    && (digitChars.contains(currentSymbol) || digitChars.contains(previous[0]))) {
 
                 addSubstringToCollection(sb.toString(), result);
                 sb.setLength(0);
             }
-            sb.append((char) symbol);
-            previous[0] = symbol;
+            sb.append((char) currentSymbol);
+            previous[0] = currentSymbol;
 
         });
         addSubstringToCollection(sb.toString(), result);

@@ -2,10 +2,8 @@ package ru.tandemservice.test.task1;
 
 import ru.tandemservice.test.task1.comparator.RowsComparator;
 
-import java.util.*;
-import java.util.stream.Collectors;
-
-import static java.util.Objects.isNull;
+import java.util.List;
+import java.util.Objects;
 
 /**
  * <h1>Задание №1</h1>
@@ -31,10 +29,6 @@ public class Task1Impl implements IStringRowsListSorter {
             }
         }
         return instance;
-    }
-
-    private static void sortArraysList(final List<String[]> rows, final int columnIndex) {
-        rows.sort(new RowsComparator(columnIndex));
     }
 
     @Override

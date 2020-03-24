@@ -6,7 +6,7 @@ import java.util.Objects;
  * Класс для хранения подстроки. Может хранить любые типы данных.
  * В контексте задачи предназначен для хранения целочисленных и строковых значений.
  * */
-public class SubString<T> implements Comparable<T>{
+public class SubString<T extends Object> implements Comparable<T>{
     private  T substring;
 
     public SubString(T substring) {
