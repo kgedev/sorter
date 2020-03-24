@@ -3,6 +3,7 @@ package ru.tandemservice.test.task1.comparator;
 import ru.tandemservice.test.task1.SubString;
 
 import java.util.*;
+import java.util.function.Predicate;
 
 import static java.util.Objects.isNull;
 
