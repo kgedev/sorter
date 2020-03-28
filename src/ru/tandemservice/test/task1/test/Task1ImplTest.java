@@ -165,6 +165,24 @@ public class Task1ImplTest {
     }
 
     @Test
+    public void sortDiferentSizeStringsTest() {
+        IStringRowsListSorter task1Impl = Task1Impl.getInstance();
+        String[] testData1 = {"1", "2a"};
+        String[] testData2 = {"2", "2a2"};
+        String[] testData3 = {"3", "2a5"};
+
+        List<String[]> testData = Arrays.asList(testData3, testData1, testData2);
+
+        assertEquals("2a5", testData.get(0)[1]);
+        assertEquals("2a", testData.get(1)[1]);
+        assertEquals("2a2", testData.get(2)[1]);
+        task1Impl.sort(testData, 1);
+        assertEquals("2a", testData.get(0)[1]);
+        assertEquals("2a2", testData.get(1)[1]);
+        assertEquals("2a5", testData.get(2)[1]);
+    }
+
+    @Test
     public void globalSortingTest() {
         IStringRowsListSorter task1Impl = Task1Impl.getInstance();
         String[] testDataA = {"null", "A", "A", null, "A"};

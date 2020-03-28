@@ -47,10 +47,19 @@ public class RowsComparator implements Comparator<String[]> {
         int minSize = Math.min(str1List.size(), str2List.size());
         int result = 0;
 
-        //Меньшая строка, всегда выше в списке.
         for (int i = 0; i < minSize; i++) {
           result = str1List.get(i).compareTo(str2List.get(i));
           if (result != 0) break;
+        }
+
+
+        if (str1List.size() != str2List.size() && result == 0) {
+            if (str1List.size() == minSize ) {
+                result = -1;
+            } else {
+                result = 1;
+            }
+
         }
 
         return result;
