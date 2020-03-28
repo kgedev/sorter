@@ -3,9 +3,10 @@ package ru.tandemservice.test.task1.comparator;
 import ru.tandemservice.test.task1.SubString;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static java.util.Objects.isNull;
 
@@ -42,6 +43,7 @@ public class RowsComparator implements Comparator<String[]> {
         List<SubString> str1List = getSubstringsList(str1);
         List<SubString> str2List = getSubstringsList(str2);
 
+        //определяем строку с наименьшей длиной
         int minSize = Math.min(str1List.size(), str2List.size());
         int result = 0;
 
@@ -55,48 +57,21 @@ public class RowsComparator implements Comparator<String[]> {
     }
 
     /**
-     * Метод позволяющий разбить строку на подстроки.
-     * Строка представляется в виде набора символов(char).
-     * В цикле перебираем символы и конструируем подстроки на лету по следующему алгоритму:
-     * Если есть предыдущий символ
-     * и (текущий символ не число или предыдущий символ не число)
-     * и (текущий символ - число или предыдущий символ число)
-     * собираем подстроку и добавляем в коллекцию.
-     * иначе добавляем текущий символ к предыдущему.
-     *
+     * Метод позволяющий разбить строку на подстроки по регулярному выражению.
+     * @string - строка из которой нужно поолучить
      * */
     private List<SubString> getSubstringsList(String string) {
+        String stringDelimiter = "(\\D+)|(\\d+)";
         List<SubString> result = new ArrayList<>();
-        List<Integer> digitChars = Arrays.asList(48, 49, 50, 51, 52, 53, 54, 55, 56, 57);
-        StringBuilder sb = new StringBuilder();
-        final Integer[] previous = {null};
 
-        string.chars().forEach(currentSymbol -> {
-            if (!isNull(previous[0])
-                    && (!digitChars.contains(currentSymbol) || !digitChars.contains(previous[0]))
-                    && (digitChars.contains(currentSymbol) || digitChars.contains(previous[0]))) {
+        Pattern pattern = Pattern.compile(stringDelimiter);
+        Matcher matcher = pattern.matcher(string);
 
-                addSubstringToCollection(sb.toString(), result);
-                sb.setLength(0);
-            }
-            sb.append((char) currentSymbol);
-            previous[0] = currentSymbol;
-
-        });
-        addSubstringToCollection(sb.toString(), result);
+        while (matcher.find()) {
+            SubString subString = new SubString(matcher.group());
+            result.add(subString);
+        }
 
         return result;
-    }
-
-    /**
-     * Метод, пытается распарсить строку в число и записать результат в объект SubString.
-     *Результатом является целое число, в противном случае - строка
-     * */
-    private void addSubstringToCollection(String string, List<SubString> list) {
-        try {
-            list.add(new SubString<java.io.Serializable>(Integer.parseInt(string)));
-        } catch (NumberFormatException e) {
-            list.add(new SubString<java.io.Serializable>(string));
-        }
     }
 }

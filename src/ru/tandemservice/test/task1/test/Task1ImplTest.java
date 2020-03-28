@@ -1,6 +1,5 @@
 package ru.tandemservice.test.task1.test;
 
-import org.junit.Assert;
 import org.junit.Test;
 import ru.tandemservice.test.task1.IStringRowsListSorter;
 import ru.tandemservice.test.task1.Task1Impl;
@@ -8,9 +7,60 @@ import ru.tandemservice.test.task1.Task1Impl;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 public class Task1ImplTest {
+
+    @Test
+    public void sortNumbersTest() {
+        IStringRowsListSorter task1Impl = Task1Impl.getInstance();
+
+        String[] testData1 = { "1" };
+        String[] testData2 = { "2" };
+        String[] testData3 = { "3" };
+        String[] testData4 = { "4" };
+
+        List<String[]> testData = Arrays.asList(testData2, testData4, testData3, testData1);
+
+        assertEquals("2", testData.get(0)[0]);
+        assertEquals("4", testData.get(1)[0]);
+        assertEquals("3", testData.get(2)[0]);
+        assertEquals("1", testData.get(3)[0]);
+        task1Impl.sort(testData, 0);
+        assertEquals("1", testData.get(0)[0]);
+        assertEquals("2", testData.get(1)[0]);
+        assertEquals("3", testData.get(2)[0]);
+        assertEquals("4", testData.get(3)[0]);
+    }
+
+    @Test
+    public void sortNumbersNullAndSpaceTest() {
+        IStringRowsListSorter task1Impl = Task1Impl.getInstance();
+
+        String[] testData1 = { "1" };
+        String[] testData2 = { "2" };
+        String[] testData3 = { "3" };
+        String[] testData4 = { "4" };
+        String[] testData5 = { null };
+        String[] testData6 = { " " };
+
+        List<String[]> testData = Arrays.asList(testData2, testData4, testData3, testData1, testData6, testData5);
+
+        assertEquals("2", testData.get(0)[0]);
+        assertEquals("4", testData.get(1)[0]);
+        assertEquals("3", testData.get(2)[0]);
+        assertEquals("1", testData.get(3)[0]);
+        assertEquals(" ", testData.get(4)[0]);
+        assertNull(testData.get(5)[0]);
+        task1Impl.sort(testData, 0);
+        assertNull(testData.get(0)[0]);
+        assertEquals(" ", testData.get(1)[0]);
+        assertEquals("1", testData.get(2)[0]);
+        assertEquals("2", testData.get(3)[0]);
+        assertEquals("3", testData.get(4)[0]);
+        assertEquals("4", testData.get(5)[0]);
+    }
 
     @Test
     public void sortNullAndStringsTest() {
@@ -94,6 +144,24 @@ public class Task1ImplTest {
         assertEquals("!b123a", testData.get(0)[1]);
         assertEquals("123a", testData.get(1)[1]);
         assertEquals("a123", testData.get(2)[1]);
+    }
+
+    @Test
+    public void sortSimilarStringsTest() {
+        IStringRowsListSorter task1Impl = Task1Impl.getInstance();
+        String[] testData1 = {"1", "b"};
+        String[] testData2 = {"2", "bac"};
+        String[] testData3 = {"3", "ba"};
+
+        List<String[]> testData = Arrays.asList(testData2, testData1, testData3);
+
+        assertEquals("bac", testData.get(0)[1]);
+        assertEquals("b", testData.get(1)[1]);
+        assertEquals("ba", testData.get(2)[1]);
+        task1Impl.sort(testData, 1);
+        assertEquals("b", testData.get(0)[1]);
+        assertEquals("ba", testData.get(1)[1]);
+        assertEquals("bac", testData.get(2)[1]);
     }
 
     @Test
