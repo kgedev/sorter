@@ -11,7 +11,8 @@ import java.util.regex.Pattern;
 import static java.util.Objects.isNull;
 
 /**
- * Класс-компоратор для сравнения строк по их подстрокам.
+ * Класс-компоратор для сравнения массивов строк.
+ * @index - номер элемента в массиве по которому предстоит сравнивать строки.
  * */
 public class RowsComparator implements Comparator<String[]> {
     private int index;
@@ -33,17 +34,17 @@ public class RowsComparator implements Comparator<String[]> {
         if (firstStr.trim().isEmpty() ) return -1;
         if (secondStr.trim().isEmpty() ) return 1;
 
-        return compareStrings(firstStr, secondStr);
+        return compareNotNullNotEmptyStrings(firstStr, secondStr);
     }
 
     /**
      * Метод позволяет сравнивать две не нулевые не пустые строки.
      * */
-    private int compareStrings(String str1, String str2) {
+    private int compareNotNullNotEmptyStrings(String str1, String str2) {
         List<SubString> str1List = getSubstringsList(str1);
         List<SubString> str2List = getSubstringsList(str2);
 
-        //определяем строку с наименьшей длиной
+        //определяем строку с наименьшей длиной.
         int minSize = Math.min(str1List.size(), str2List.size());
         int result = 0;
 
@@ -51,7 +52,6 @@ public class RowsComparator implements Comparator<String[]> {
           result = str1List.get(i).compareTo(str2List.get(i));
           if (result != 0) break;
         }
-
 
         if (str1List.size() != str2List.size() && result == 0) {
             if (str1List.size() == minSize ) {
@@ -67,7 +67,7 @@ public class RowsComparator implements Comparator<String[]> {
 
     /**
      * Метод позволяющий разбить строку на подстроки по регулярному выражению.
-     * @string - строка из которой нужно поолучить
+     * @string - строка которую необходимо разбить на подстроки.
      * */
     private List<SubString> getSubstringsList(String string) {
         String stringDelimiter = "(\\D+)|(\\d+)";

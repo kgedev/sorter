@@ -3,8 +3,7 @@ package ru.tandemservice.test.task1;
 import java.util.Objects;
 
 /**
- * Класс для хранения подстроки. Может хранить любые типы данных.
- * В контексте задачи предназначен для хранения целочисленных и строковых значений.
+ * Класс для хранения подстроки в формате String.
  * */
 public class SubString implements Comparable<SubString>{
     private  String substring;
