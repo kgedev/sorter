@@ -9,7 +9,7 @@ public interface IElementNumberAssigner {
 
     /**
      * Метод выставляет номера {@link IElement#setupNumber(int)}
-     * для элементов коллекции {@code elements}
+     *    {@code elements}
      * в порядке следования элементов в коллекции.
      *
      * Изначально коллекция не содержит элементов, номера которых повторяются.

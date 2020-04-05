@@ -2,6 +2,7 @@ package ru.tandemservice.test.task2;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * одна из возможных реализаций {@link IElement}
@@ -67,5 +68,20 @@ public final class ElementExampleImpl implements IElement {
     @Override
     protected Object clone() throws CloneNotSupportedException {
         throw new UnsupportedOperationException(); // клонировать элементы нельзя
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ElementExampleImpl that = (ElementExampleImpl) o;
+        return id == that.id &&
+                Objects.equals(context, that.context) &&
+                Objects.equals(number, that.number);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(context, id, number);
     }
 }
