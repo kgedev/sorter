@@ -91,6 +91,61 @@ public class Task2ImplTest {
         System.out.println("test operation count - " + ctx.getOperationCount());
     }
 
+    @Test
+    public void testDifferentNumbers() {
+        int expectedOperationCount = 7;
+        IElement el0 = new ElementExampleImpl(ctx, -1);
+        IElement el1 = new ElementExampleImpl(ctx, 345);
+        IElement el2 = new ElementExampleImpl(ctx, 2);
+        IElement el3 = new ElementExampleImpl(ctx, 8);
+        IElement el4 = new ElementExampleImpl(ctx, Integer.MAX_VALUE);
+        IElement el5 = new ElementExampleImpl(ctx, Integer.MIN_VALUE);
+        IElement el6 = new ElementExampleImpl(ctx, 6);
+        IElement el7 = new ElementExampleImpl(ctx, -324);
+        IElement el8 = new ElementExampleImpl(ctx, 0);
+
+        final List<IElement> list = Arrays.asList(el0, el1, el2, el3, el4, el5, el6, el7, el8);
+
+        task2.assignNumbers(list);
+        checkOrder(list);
+        assertEquals(expectedOperationCount, ctx.getOperationCount());
+
+        System.out.println("test operation count - " + ctx.getOperationCount());
+    }
+
+    @Test
+    public void testWhenPairLikeMirror() {
+        int expectedOperationCount = 3;
+        IElement el0 = new ElementExampleImpl(ctx, 2);
+        IElement el1 = new ElementExampleImpl(ctx, 1);
+        IElement el2 = new ElementExampleImpl(ctx, 0);
+
+        final List<IElement> list = Arrays.asList(el0, el1, el2);
+
+        task2.assignNumbers(list);
+        checkOrder(list);
+        assertEquals(expectedOperationCount, ctx.getOperationCount());
+
+        System.out.println("test operation count - " + ctx.getOperationCount());
+    }
+
+    @Test
+    public void testWhenPairsLikeMirror() {
+        IElement el0 = new ElementExampleImpl(ctx, 2);
+        IElement el1 = new ElementExampleImpl(ctx, 3);
+        IElement el2 = new ElementExampleImpl(ctx, 0);
+        IElement el4 = new ElementExampleImpl(ctx, 1);
+
+        final List<IElement> list = Arrays.asList(el0, el1, el2, el4);
+        int expectedOperationCount = (int)(list.size() * 1.5);
+
+        task2.assignNumbers(list);
+        checkOrder(list);
+        assertEquals(expectedOperationCount, ctx.getOperationCount());
+
+        System.out.println("test operation count - " + ctx.getOperationCount());
+    }
+
     private void checkOrder(List<IElement> list) {
         AtomicInteger counter = new AtomicInteger(0);
         list.forEach(iElement -> assertEquals(counter.get(), list.get(counter.getAndIncrement()).getNumber()));

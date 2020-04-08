@@ -14,7 +14,7 @@ public class Task1ImplTest {
 
     @Test
     public void sortNumbersTest() {
-        IStringRowsListSorter task1Impl = Task1Impl.getInstance();
+        IStringRowsListSorter task1Impl = Task1Impl.INSTANCE;
 
         String[] testData1 = { "1" };
         String[] testData2 = { "2" };
@@ -36,7 +36,7 @@ public class Task1ImplTest {
 
     @Test
     public void sortNumbersNullAndSpaceTest() {
-        IStringRowsListSorter task1Impl = Task1Impl.getInstance();
+        IStringRowsListSorter task1Impl = Task1Impl.INSTANCE;
 
         String[] testData1 = { "1" };
         String[] testData2 = { "2" };
@@ -64,7 +64,7 @@ public class Task1ImplTest {
 
     @Test
     public void sortNullAndStringsTest() {
-        IStringRowsListSorter task1Impl = Task1Impl.getInstance();
+        IStringRowsListSorter task1Impl = Task1Impl.INSTANCE;
         String[] testDataA = {"A_null", "А", "А", null };
         String[] testDataB = {"B_null", "B", "B", null };
         String[] testDataC = {"1ram16gb256", "C", "C", "1ram16gb256" };
@@ -86,7 +86,7 @@ public class Task1ImplTest {
 
     @Test
     public void sortNullAndEmptyStringsTest() {
-        IStringRowsListSorter task1Impl = Task1Impl.getInstance();
+        IStringRowsListSorter task1Impl = Task1Impl.INSTANCE;
         String[] testDataA = {"A_null", null };
         String[] testDataB = {"", "" };
         String[] testDataC = {"C_null", null };
@@ -108,7 +108,7 @@ public class Task1ImplTest {
 
     @Test
     public void sortByNumbersInSubStringTest() {
-        IStringRowsListSorter task1Impl = Task1Impl.getInstance();
+        IStringRowsListSorter task1Impl = Task1Impl.INSTANCE;
         String[] testData1 = {"1", "!@#$% ^&*()_+1 SDSFS"};
         String[] testData2 = {"2", "!@#$% ^&*()_+2 FEASFASAS"};
         String[] testData3 = {"3", "!@#$% ^&*()_+3ewwerwe"};
@@ -130,7 +130,7 @@ public class Task1ImplTest {
 
     @Test
     public void sortAllAsStringsTest() {
-        IStringRowsListSorter task1Impl = Task1Impl.getInstance();
+        IStringRowsListSorter task1Impl = Task1Impl.INSTANCE;
         String[] testData1 = {"1", "a123"};
         String[] testData2 = {"2", "123a"};
         String[] testData3 = {"3", "!b123a"};
@@ -148,7 +148,7 @@ public class Task1ImplTest {
 
     @Test
     public void sortSimilarStringsTest() {
-        IStringRowsListSorter task1Impl = Task1Impl.getInstance();
+        IStringRowsListSorter task1Impl = Task1Impl.INSTANCE;
         String[] testData1 = {"1", "b"};
         String[] testData2 = {"2", "bac"};
         String[] testData3 = {"3", "ba"};
@@ -166,7 +166,7 @@ public class Task1ImplTest {
 
     @Test
     public void sortDiferentSizeStringsTest() {
-        IStringRowsListSorter task1Impl = Task1Impl.getInstance();
+        IStringRowsListSorter task1Impl = Task1Impl.INSTANCE;
         String[] testData1 = {"1", "2a"};
         String[] testData2 = {"2", "2a2"};
         String[] testData3 = {"3", "2a5"};
@@ -184,7 +184,7 @@ public class Task1ImplTest {
 
     @Test
     public void globalSortingTest() {
-        IStringRowsListSorter task1Impl = Task1Impl.getInstance();
+        IStringRowsListSorter task1Impl = Task1Impl.INSTANCE;
         String[] testDataA = {"null", "A", "A", null, "A"};
         String[] testDataB = {"null", "B", "B", null, "B"};
         String[] testDataC = {"", "C", "C", "", "C"};
