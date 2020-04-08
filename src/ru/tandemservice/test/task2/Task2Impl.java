@@ -1,11 +1,8 @@
 package ru.tandemservice.test.task2;
 
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.Collectors;
 
 /**
  * <h1>Задание №2</h1>
@@ -24,68 +21,80 @@ public class Task2Impl implements IElementNumberAssigner {
     @Override
     public void assignNumbers(final List<IElement> elements) {
         // напишите здесь свою реализацию. Мы ждем от вас хорошо структурированного, документированного и понятного кода, работающего за разумное время.
-        AtomicInteger index = new AtomicInteger();
-        Map<Integer, Integer> mainCache = elements.stream().collect(Collectors.toMap(elem -> index.getAndIncrement(), IElement::getNumber));
-        List<Integer> elementsValues = new ArrayList<>(mainCache.values());
+        ElementsCache cache = new ElementsCache(elements);
+        PredicateBuilder predicate = new PredicateBuilder(elements, cache.getCommonCache());
 
-        Map<Integer, Integer> cache1 = new HashMap<>();
-        Map<Integer, Integer> cache2 = new HashMap<>();
-        Map<Integer, Integer> cache3 = new HashMap<>();
+        /**
+         * пробегаемся по кэшу и устанавливаем в качестве значения индекс для элементов, у которых:
+         *  - значение элемента не равно его индексу
+         *  - значение элемента не входит в диапазон индексов коллекции элементов
+         *  - в коллекции нет ни одного элемента значение которого было бы равно текущему индексу
+         *
+         * */
+        cache.getCommonCache().entrySet().stream()
+                .filter(predicate.changeNowElementNumberPredicate())
+                .forEach(entry -> elements.get(entry.getKey()).setupNumber(entry.getKey()));
 
-       elements.forEach(element -> {
-           int value = element.getNumber();
-           int idx = elements.indexOf(element);
-
-           boolean idxNotEqualValue = value != idx;
-           boolean valueInElementsIdxRange = value < elements.size() && value >= 0;
-           boolean elementsValuesContainsIdx = elementsValues.contains(idx);
-           boolean crossMatch = value != elements.indexOf(elements.get(value));
-
-           boolean condition1 = idxNotEqualValue && !valueInElementsIdxRange && !elementsValuesContainsIdx;
-           boolean condition2 = idxNotEqualValue && !valueInElementsIdxRange && elementsValuesContainsIdx;
-           boolean condition3 = idxNotEqualValue && valueInElementsIdxRange && elementsValuesContainsIdx && !crossMatch;
-           boolean condition4 = idxNotEqualValue && valueInElementsIdxRange && elementsValuesContainsIdx && crossMatch;
-
-           if(condition1) {
-               element.setupNumber(idx);
-           } else if (condition2) {
-               cache1.put(idx, value);
-           } else if (condition3) {
-               cache2.put(idx, value);
-           } else if (condition4) {
-               cache3.put(idx, value);
-           }
-
-       });
-        a1Algorithm(elements, cache2, mainCache);
+        if (!cache.getCache2().isEmpty()) {
+            a1Algorithm(elements, cache);
+        }
+        if (!cache.getCache3().isEmpty()) {
+            a2Algorithm();
+        }
+        cache.getCache1().keySet().forEach(key -> elements.get(key).setupNumber(key));
     }
 
-    //проверяет равен ли индекс элемента его значению
-    private boolean isIndexMatchElementValue(int idx, IElement element) {
-        return idx == element.getNumber();
-    }
+    private void a1Algorithm(List<IElement> elements, ElementsCache cache) {
+        Map<Integer, Integer> commonCache = cache.getCommonCache();
+        Map<Integer, Integer> cache2 = cache.getCache2();
 
-    private void a1Algorithm(List<IElement> elements, Map<Integer, Integer> cache2, Map<Integer, Integer> mainCache) {
-        int random_number = 0;
-        do {
-            random_number = mainCache.size() + (int) (Math.random() * Integer.MAX_VALUE);
-        } while(mainCache.values().contains(random_number));
-
-        Integer elementIndex = cache2.entrySet().stream().findFirst().get().getKey();
-        Integer tmp = elements.get(elementIndex).getNumber();
-        elements.get(elementIndex).setupNumber(random_number);
+        Integer elementIndex = findIdx(cache);
+        Integer tmp = null;
 
         while (cache2.size() != 0) {
 
-            elementIndex = tmp;
-            tmp = cache2.get(elementIndex);
-            elements.get(elementIndex).setupNumber(elementIndex);
-            cache2.remove(elementIndex);
+            if (elementIndex == null) {
+                elementIndex = cache2.entrySet().stream().findFirst().get().getKey();
+                Integer tempValue = getRandomNumberNotContainsInTheCollection(commonCache);
+                elements.get(elementIndex).setupNumber(tempValue);
+                tmp = cache2.get(elementIndex);
+                cache2.put(elementIndex, tempValue);
+            } else {
+                elements.get(elementIndex).setupNumber(elementIndex);
+                tmp = cache2.get(elementIndex);
+                cache2.remove(elementIndex);
+            }
+
+            if (!cache2.containsKey(tmp) && cache2.size() != 0) {
+                elementIndex = null;
+            } else {
+                elementIndex = tmp;
+            }
         }
     }
 
-    private void a2Algrorithm() {
+    private void a2Algorithm() {
 
+    }
+
+    private Integer findIdx(ElementsCache cache) {
+        return cache.getCache2().keySet().stream()
+                .filter(key -> !cache.getCache2().containsValue(key))
+                .findFirst()
+                .orElse(null);
+    }
+
+    private int getRandomNumberNotContainsInTheCollection(Map<Integer, Integer> commonCache) {
+        int random_number = 0;
+        do {
+            int maxValue = commonCache.values().stream().max(Comparator.naturalOrder()).get();
+            if (maxValue != Integer.MAX_VALUE) {
+                random_number = maxValue + 1;
+            } else {
+                random_number = commonCache.size() + (int) (Math.random() * Integer.MAX_VALUE);
+            }
+        } while (commonCache.containsValue(random_number));
+        return random_number;
     }
 
 }
