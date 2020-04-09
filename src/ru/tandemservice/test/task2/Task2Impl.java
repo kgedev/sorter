@@ -1,6 +1,6 @@
 package ru.tandemservice.test.task2;
 
-import ru.tandemservice.test.task2.descision.NumbersAssigner;
+import ru.tandemservice.test.task2.assigner.NumbersAssigner;
 
 import java.util.List;
 

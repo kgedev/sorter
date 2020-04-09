@@ -1,4 +1,4 @@
-package ru.tandemservice.test.task2.descision;
+package ru.tandemservice.test.task2.assigner;
 
 import ru.tandemservice.test.task2.IElement;
 

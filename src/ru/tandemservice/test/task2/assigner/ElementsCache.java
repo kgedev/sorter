@@ -1,9 +1,10 @@
-package ru.tandemservice.test.task2.descision;
+package ru.tandemservice.test.task2.assigner;
 
 import ru.tandemservice.test.task2.IElement;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
@@ -19,7 +20,12 @@ public class ElementsCache {
 
     public ElementsCache(List<IElement> elements) {
         AtomicInteger index = new AtomicInteger();
-        commonCache = elements.stream().collect(Collectors.toMap(elem -> index.getAndIncrement(), IElement::getNumber));
+        commonCache = elements.stream()
+                .peek(element -> {
+                    if (element == null) index.getAndIncrement();
+                })
+                .filter(Objects::nonNull)
+                .collect(Collectors.toMap(elem -> index.getAndIncrement(), IElement::getNumber));
         predicateBuilder = new PredicateBuilder(elements, commonCache);
     }
 

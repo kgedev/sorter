@@ -6,148 +6,163 @@ import ru.tandemservice.test.task2.IElement;
 import ru.tandemservice.test.task2.Task2Impl;
 
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.junit.Assert.assertEquals;
 
 public class Task2ImplTest {
-    private Task2Impl task2 = new Task2Impl();
-    private ElementExampleImpl.Context ctx = new ElementExampleImpl.Context();
+    private final Task2Impl task2 = (Task2Impl) Task2Impl.INSTANCE;
+    private final ElementExampleImpl.Context ctx = new ElementExampleImpl.Context();
 
     @Test
-    public void testA1Algorithm() {
-        IElement el1 = new ElementExampleImpl(ctx, 1);
-        IElement el2 = new ElementExampleImpl(ctx, 4);
-        IElement el3 = new ElementExampleImpl(ctx, 0);
-        IElement el4 = new ElementExampleImpl(ctx, 2);
-        IElement el5 = new ElementExampleImpl(ctx, 3);
+    public void whenListIsEmpty() {
+        final LinkedList elements = new LinkedList();
 
-        List<IElement> list = Arrays.asList(el1, el2, el3, el4, el5);
-        int expectedOperationCount = list.size() + 1;
-
-        task2.assignNumbers(list);
-        checkOrder(list);
-        assertEquals(expectedOperationCount, ctx.getOperationCount());
-
-        System.out.println("testA1Algorithm operation count - " + ctx.getOperationCount());
-    }
-
-    @Test
-    public void testA1AndOtherCases() {
-        IElement el1 = new ElementExampleImpl(ctx, 1);
-        IElement el2 = new ElementExampleImpl(ctx, 4);
-        IElement el3 = new ElementExampleImpl(ctx, 0);
-        IElement el4 = new ElementExampleImpl(ctx, 2);
-        IElement el5 = new ElementExampleImpl(ctx, 3);
-        IElement el6 = new ElementExampleImpl(ctx, 28);
-        IElement el7 = new ElementExampleImpl(ctx, 6);
-        IElement el8 = new ElementExampleImpl(ctx, 8);
-        IElement el9 = new ElementExampleImpl(ctx, -32);
-
-        final List<IElement> list = Arrays.asList(el1, el2, el3, el4, el5, el6, el7, el8, el9);
-        int expectedOperationCount = list.size();
-
-        task2.assignNumbers(list);
-        checkOrder(list);
-        assertEquals(expectedOperationCount, ctx.getOperationCount());
-
-        System.out.println("testA1AndOtherCases operation count - " + ctx.getOperationCount());
-    }
-
-    @Test
-    public void testWhenOneElementValueIsNotInIndexRange() {
-        IElement el1 = new ElementExampleImpl(ctx, 1);
-        IElement el2 = new ElementExampleImpl(ctx, 2);
-        IElement el3 = new ElementExampleImpl(ctx, 3);
-        IElement el4 = new ElementExampleImpl(ctx, 4);
-        IElement el5 = new ElementExampleImpl(ctx, 2323);
-
-        final List<IElement> list = Arrays.asList(el1, el2, el3, el4, el5);
-        int expectedOperationCount = list.size();
-
-        task2.assignNumbers(list);
-        checkOrder(list);
-        assertEquals(expectedOperationCount, ctx.getOperationCount());
-
-        System.out.println("test operation count - " + ctx.getOperationCount());
-    }
-
-    @Test
-    public void testWhenListIsSorted() {
         int expectedOperationCount = 0;
-        IElement el1 = new ElementExampleImpl(ctx, 0);
-        IElement el2 = new ElementExampleImpl(ctx, 1);
-        IElement el3 = new ElementExampleImpl(ctx, 2);
-        IElement el4 = new ElementExampleImpl(ctx, 3);
-        IElement el5 = new ElementExampleImpl(ctx, 4);
+        task2.assignNumbers(elements);
 
-        final List<IElement> list = Arrays.asList(el1, el2, el3, el4, el5);
-
-        task2.assignNumbers(list);
-        checkOrder(list);
         assertEquals(expectedOperationCount, ctx.getOperationCount());
-
-        System.out.println("test operation count - " + ctx.getOperationCount());
     }
 
     @Test
-    public void testDifferentNumbers() {
-        int expectedOperationCount = 7;
-        IElement el0 = new ElementExampleImpl(ctx, -1);
-        IElement el1 = new ElementExampleImpl(ctx, 345);
-        IElement el2 = new ElementExampleImpl(ctx, 2);
-        IElement el3 = new ElementExampleImpl(ctx, 8);
-        IElement el4 = new ElementExampleImpl(ctx, Integer.MAX_VALUE);
-        IElement el5 = new ElementExampleImpl(ctx, Integer.MIN_VALUE);
-        IElement el6 = new ElementExampleImpl(ctx, 6);
-        IElement el7 = new ElementExampleImpl(ctx, -324);
-        IElement el8 = new ElementExampleImpl(ctx, 0);
+    public void whenElementsAlreadyHaveValuesEqualsThemIndexes() {
+        final List<IElement> elements = Arrays.asList(
+                new ElementExampleImpl(ctx, 0),
+                new ElementExampleImpl(ctx, 1),
+                new ElementExampleImpl(ctx, 2),
+                new ElementExampleImpl(ctx, 3)
+        );
 
-        final List<IElement> list = Arrays.asList(el0, el1, el2, el3, el4, el5, el6, el7, el8);
+        int expectedOperationCount = 0;
+        task2.assignNumbers(elements);
 
-        task2.assignNumbers(list);
-        checkOrder(list);
         assertEquals(expectedOperationCount, ctx.getOperationCount());
-
-        System.out.println("test operation count - " + ctx.getOperationCount());
     }
 
     @Test
-    public void testWhenPairLikeMirror() {
-        int expectedOperationCount = 3;
-        IElement el0 = new ElementExampleImpl(ctx, 2);
-        IElement el1 = new ElementExampleImpl(ctx, 1);
-        IElement el2 = new ElementExampleImpl(ctx, 0);
+    public void whenValuesAreInListIndexesRange() {
+        final List<IElement> list = Arrays.asList(
+                new ElementExampleImpl(ctx, 1),
+                new ElementExampleImpl(ctx, 4),
+                new ElementExampleImpl(ctx, 0),
+                new ElementExampleImpl(ctx, 2),
+                new ElementExampleImpl(ctx, 3)
+        );
 
-        final List<IElement> list = Arrays.asList(el0, el1, el2);
-
+        int expectedOperationCount = 1 + (int) list.stream().filter(Objects::nonNull).count();
         task2.assignNumbers(list);
         checkOrder(list);
-        assertEquals(expectedOperationCount, ctx.getOperationCount());
 
-        System.out.println("test operation count - " + ctx.getOperationCount());
+        assertEquals(expectedOperationCount, ctx.getOperationCount());
     }
 
     @Test
-    public void testWhenPairsLikeMirror() {
-        IElement el0 = new ElementExampleImpl(ctx, 2);
-        IElement el1 = new ElementExampleImpl(ctx, 3);
-        IElement el2 = new ElementExampleImpl(ctx, 0);
-        IElement el4 = new ElementExampleImpl(ctx, 1);
+    public void whenValuesAreInListIndexesRangeAndTheyHaveMirrorPair() {
+        final List<IElement> list = Arrays.asList(
+                new ElementExampleImpl(ctx, 1),
+                new ElementExampleImpl(ctx, 0),
+                new ElementExampleImpl(ctx, 3),
+                new ElementExampleImpl(ctx, 2),
+                new ElementExampleImpl(ctx, 5),
+                new ElementExampleImpl(ctx, 4)
+        );
 
-        final List<IElement> list = Arrays.asList(el0, el1, el2, el4);
-        int expectedOperationCount = (int)(list.size() * 1.5);
 
+        int expectedOperationCount = (int) (list.stream().filter(Objects::nonNull).count() * 1.5);
         task2.assignNumbers(list);
         checkOrder(list);
-        assertEquals(expectedOperationCount, ctx.getOperationCount());
 
-        System.out.println("test operation count - " + ctx.getOperationCount());
+        assertEquals(expectedOperationCount, ctx.getOperationCount());
+    }
+
+    @Test
+    public void testWhenValuesAreOutOfListIndexesRange() {
+        final List<IElement> list = Arrays.asList(
+                new ElementExampleImpl(ctx, 34),
+                new ElementExampleImpl(ctx, 11),
+                new ElementExampleImpl(ctx, Integer.MAX_VALUE),
+                new ElementExampleImpl(ctx, 43),
+                new ElementExampleImpl(ctx, 456744),
+                new ElementExampleImpl(ctx, 18)
+        );
+
+        int expectedOperationCount = (int) list.stream().filter(Objects::nonNull).count();
+        task2.assignNumbers(list);
+        checkOrder(list);
+
+        assertEquals(expectedOperationCount, ctx.getOperationCount());
+    }
+
+    @Test
+    public void testWhenValuesAreOutOfListIndexesRangeAndNegatives() {
+        final List<IElement> list = Arrays.asList(
+                new ElementExampleImpl(ctx, -34),
+                new ElementExampleImpl(ctx, -11),
+                new ElementExampleImpl(ctx, Integer.MIN_VALUE),
+                new ElementExampleImpl(ctx, -43),
+                new ElementExampleImpl(ctx, -456744),
+                new ElementExampleImpl(ctx, -18)
+        );
+
+        int expectedOperationCount = (int) list.stream().filter(Objects::nonNull).count();
+        task2.assignNumbers(list);
+        checkOrder(list);
+
+        assertEquals(expectedOperationCount, ctx.getOperationCount());
+    }
+
+    @Test
+    public void tesNullList() {
+        final List<IElement> list = Arrays.asList(null, null, null, null);
+
+        int expectedOperationCount = (int) list.stream().filter(Objects::nonNull).count();
+        task2.assignNumbers(list);
+        checkOrder(list);
+
+        assertEquals(expectedOperationCount, ctx.getOperationCount());
+    }
+
+    @Test
+    public void testWhenValuesAreDifferent() {
+        final List<IElement> list = Arrays.asList(
+                new ElementExampleImpl(ctx, 1),
+                new ElementExampleImpl(ctx, 0),
+                new ElementExampleImpl(ctx, Integer.MAX_VALUE ),
+                new ElementExampleImpl(ctx, -43),
+                new ElementExampleImpl(ctx, -456744),
+                new ElementExampleImpl(ctx, Integer.MIN_VALUE),
+                null,
+                new ElementExampleImpl(ctx, 1234),
+                new ElementExampleImpl(ctx, 8),
+                new ElementExampleImpl(ctx, 6),
+                new ElementExampleImpl(ctx, 12),
+                new ElementExampleImpl(ctx, 3),
+                new ElementExampleImpl(ctx, 13),
+                new ElementExampleImpl(ctx, 2),
+                new ElementExampleImpl(ctx, 11),
+                new ElementExampleImpl(ctx, 4),
+                new ElementExampleImpl(ctx, 7),
+                null
+
+        );
+
+        int expectedOperationCount = 16;
+        task2.assignNumbers(list);
+        checkOrder(list);
+
+        assertEquals(expectedOperationCount, ctx.getOperationCount());
     }
 
     private void checkOrder(List<IElement> list) {
         AtomicInteger counter = new AtomicInteger(0);
-        list.forEach(iElement -> assertEquals(counter.get(), list.get(counter.getAndIncrement()).getNumber()));
+        list.stream()
+                .peek(element -> {
+                    if (element == null) counter.getAndIncrement();
+                })
+                .filter(Objects::nonNull)
+                .forEach(iElement -> assertEquals(counter.get(), list.get(counter.getAndIncrement()).getNumber()));
     }
 }

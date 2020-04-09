@@ -1,4 +1,4 @@
-package ru.tandemservice.test.task2.descision;
+package ru.tandemservice.test.task2.assigner;
 
 import ru.tandemservice.test.task2.IElement;
 
@@ -34,7 +34,7 @@ public class NumbersAssigner {
         Map<Integer, Integer> commonCache = cache.getCommonCache();
         Map<Integer, Integer> valuesInIndexesRange = cache.getValuesInIndexesRange();
 
-        Integer elementIndex = findIdx(cache);
+        Integer elementIndex = findIdx(valuesInIndexesRange);
         Integer tmp;
 
         while (valuesInIndexesRange.size() != 0) {
@@ -51,7 +51,7 @@ public class NumbersAssigner {
             }
 
             if (!valuesInIndexesRange.containsKey(tmp) && valuesInIndexesRange.size() != 0) {
-                elementIndex = null;
+                elementIndex = findIdx(valuesInIndexesRange);
             } else {
                 elementIndex = tmp;
             }
@@ -64,9 +64,9 @@ public class NumbersAssigner {
      * с элемента с таким индексом начнется замена.
      *
      * */
-    private Integer findIdx(ElementsCache cache) {
-        return cache.getValuesInIndexesRange().keySet().stream()
-                .filter(key -> !cache.getValuesInIndexesRange().containsValue(key))
+    private Integer findIdx(Map<Integer, Integer> cache) {
+        return cache.keySet().stream()
+                .filter(key -> !cache.containsValue(key))
                 .findFirst()
                 .orElse(null);
     }
