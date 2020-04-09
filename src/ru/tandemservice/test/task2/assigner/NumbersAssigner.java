@@ -12,25 +12,14 @@ public class NumbersAssigner {
         ElementsCache cache = new ElementsCache(elements);
         PredicateBuilder predicate = new PredicateBuilder(elements, cache.getCommonCache());
 
-        /*
-         * Пробегаемся по кэшу и устанавливаем в качестве значения индекс для элементов, у которых:
-         *  - значение элемента не равно его индексу
-         *  - значение элемента не входит в диапазон индексов коллекции элементов
-         *  - в коллекции нет ни одного элемента значение которого было бы равно текущему индексу
-         *
-         * */
-        cache.getCommonCache().entrySet().stream()
-                .filter(predicate.changeNowElementNumberPredicate())
-                .forEach(entry -> elements.get(entry.getKey()).setupNumber(entry.getKey()));
-
-        if (!cache.getValuesInIndexesRange().isEmpty()) {
-            assignIndexesToElementNumbers(elements, cache);
-        }
-
+        assignNumberIfPossible(elements, cache, predicate);
+        assignIndexesToElementNumbers(elements, cache);
         cache.getValuesOutOfIndexesRange().keySet().forEach(key -> elements.get(key).setupNumber(key));
     }
 
     private void assignIndexesToElementNumbers(List<IElement> elements, ElementsCache cache) {
+        if (cache.getValuesInIndexesRange().isEmpty()) return;
+
         Map<Integer, Integer> commonCache = cache.getCommonCache();
         Map<Integer, Integer> valuesInIndexesRange = cache.getValuesInIndexesRange();
 
@@ -88,5 +77,18 @@ public class NumbersAssigner {
         } while (commonCache.containsValue(random_number));
 
         return random_number;
+    }
+
+    private void assignNumberIfPossible(List<IElement> elements, ElementsCache cache, PredicateBuilder predicate) {
+        /*
+         * Пробегаемся по кэшу и устанавливаем в качестве значения индекс для элементов, у которых:
+         *  - значение элемента не равно его индексу
+         *  - значение элемента не входит в диапазон индексов коллекции элементов
+         *  - в коллекции нет ни одного элемента значение которого было бы равно текущему индексу
+         *
+         * */
+        cache.getCommonCache().entrySet().stream()
+                .filter(predicate.changeNowElementNumberPredicate())
+                .forEach(entry -> elements.get(entry.getKey()).setupNumber(entry.getKey()));
     }
 }
