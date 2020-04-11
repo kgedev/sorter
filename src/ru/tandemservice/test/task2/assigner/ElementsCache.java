@@ -2,6 +2,7 @@ package ru.tandemservice.test.task2.assigner;
 
 import ru.tandemservice.test.task2.IElement;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -15,54 +16,74 @@ import java.util.stream.Collectors;
  *  - value - значение поля number элемента IElement.
  * */
 public class ElementsCache {
-    private Map<Integer, Integer> commonCache;
-    private PredicateBuilder predicateBuilder;
+    private final List<IElement> elements;
+    private Map<Integer, Integer> actualElementsOrder;
+    private Map<Integer, Integer> expectedElementsOrder;
 
     public ElementsCache(List<IElement> elements) {
+        this.elements = elements;
+        actualElementsOrder = getActualOrderForAssignNumbers();
+        expectedElementsOrder = getExpectedOrder();
+    }
+
+    private Map<Integer, Integer> getActualOrder() {
         AtomicInteger index = new AtomicInteger();
-        commonCache = elements.stream()
+        return elements.stream()
                 .peek(element -> {
                     if (element == null) index.getAndIncrement();
                 })
                 .filter(Objects::nonNull)
                 .collect(Collectors.toMap(elem -> index.getAndIncrement(), IElement::getNumber));
-        predicateBuilder = new PredicateBuilder(elements, commonCache);
     }
 
-    /**
-     * Кэш всех элементов из списка List<IElement> elements в виде Map<Integer, Integer> где
-     * - key - индекс элемента в списке elements
-     * - value - значение поле number элемента IElement
-     *
-     **/
+    private Map<Integer, Integer> getExpectedOrder() {
+        AtomicInteger index = new AtomicInteger(0);
+        Map<Integer, Integer> result = getActualOrder();
 
-    public Map<Integer, Integer> getCommonCache() {
-        return commonCache;
+        List<Integer> expectedValuesOrderList = elements.stream()
+                .filter(Objects::nonNull)
+                .map(IElement::getNumber)
+                .sorted(Comparator.naturalOrder())
+                .collect(Collectors.toList());
+
+        result.entrySet().forEach(entry -> entry.setValue(expectedValuesOrderList.get(index.getAndIncrement())));
+
+        return result;
     }
 
-    /**
-     * Формируем кэш элементов, в который попадают элементы у которых:
-     *  - значение элемента не равно его индексу
-     *  - значение не входит в диапазон индексов коллекции элементов 0 > val >= arr.length
-     *  - в коллекции есть элемент, значение которого равно текущему индексу
-     *  list[12 8 16 0 14] - попадет только 0-й элемент.
-     * */
-    public  Map<Integer, Integer> getValuesOutOfIndexesRange() {
-        return commonCache.entrySet().stream()
-                .filter(predicateBuilder.getValuesOutOfIndexesRangePredicate())
+    private Map<Integer, Integer> getActualOrderForAssignNumbers() {
+        return getActualOrder().entrySet().stream()
+                .filter(entry -> !entry.getValue().equals(getExpectedOrder().get(entry.getKey())))
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     }
 
-    /**
-     * Формируем кэш элементов, в который попадают элементы у которых:
-     *  - значение элемента не равно его индексу
-     *  - значение входит в диапазон индексов коллекции элементов 0 <= val < arr.length
-     *  list[1 0 16 2 14] - попадут 0, 1 и 3-й элементы.
-     * */
-    public Map<Integer, Integer> getValuesInIndexesRange() {
-        return commonCache.entrySet().stream()
-                .filter(predicateBuilder.getValuesInIndexesRangePredicate())
-                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+    public Map<Integer, Integer> getActualElementsOrder() {
+        return actualElementsOrder;
     }
 
+    public Map<Integer, Integer> getExpectedElementsOrder() {
+        return expectedElementsOrder;
+    }
+
+    /**
+     * Возвращает ключ для пееданного значения.
+     * @param value - значение, для которого нужно получить ключ;
+     * */
+    public Integer getKeyByValueFromExpectedMap(Integer value) {
+        return expectedElementsOrder.entrySet().stream()
+                .filter(entry -> entry.getValue().equals(value))
+                .map(Map.Entry::getKey)
+                .findFirst().orElse(null);
+    }
+
+    /**
+     * Возвращает ключ первого элемента в коллекции.
+     *  key - индекс IElement в коллекции List<IElement>
+     *  value - значение поля number IElement
+     * */
+    public Integer getFirstElementIndexFromActualMap() {
+        return actualElementsOrder.keySet().stream()
+                .findFirst()
+                .orElse(null);
+    }
 }

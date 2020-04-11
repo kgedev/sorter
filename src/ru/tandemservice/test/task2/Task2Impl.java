@@ -21,7 +21,10 @@ public class Task2Impl implements IElementNumberAssigner {
     @Override
     public void assignNumbers(final List<IElement> elements) {
         // напишите здесь свою реализацию. Мы ждем от вас хорошо структурированного, документированного и понятного кода, работающего за разумное время.
-        NumbersAssigner assigner = new NumbersAssigner();
-        assigner.assignNumbers(elements);
+        if (!elements.isEmpty()) {
+            NumbersAssigner assigner = new NumbersAssigner();
+            assigner.assignNumbers(elements);
+        }
+
     }
 }
