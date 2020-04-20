@@ -48,6 +48,7 @@ public class RowsComparator implements Comparator<String[]> {
         int minSize = Math.min(str1List.size(), str2List.size());
         int result = 0;
 
+        //сравниваем до тех пор пока не попадутся разные строки
         for (int i = 0; i < minSize; i++) {
           result = str1List.get(i).compareTo(str2List.get(i));
           if (result != 0) break;
@@ -78,6 +79,7 @@ public class RowsComparator implements Comparator<String[]> {
 
         while (matcher.find()) {
             SubString subString = new SubString(matcher.group());
+            String res = matcher.group();
             result.add(subString);
         }
 
